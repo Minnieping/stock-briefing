@@ -108,6 +108,105 @@ python test_api.py
 
 성공하면 Claude 가 한국어로 자기소개를 출력합니다. 인증/네트워크 문제가 있으면 한국어로 원인을 알려줍니다.
 
+### 6. 시장 데이터 수집 테스트
+
+`config.py` 의 관심 종목 리스트를 기준으로 KOSPI/KOSDAQ 지수와 주요 종목 시세를 가져와 콘솔에 표시하고 `data/market_YYYYMMDD.json` 으로 저장합니다.
+
+```bash
+python collectors/korean_market.py
+```
+
+## 데이터 구조
+
+`collectors/korean_market.py` 가 만들어 내는 JSON 형식입니다. 추후 Claude API 에 그대로 입력해 브리핑을 생성할 예정입니다.
+
+### 예시 — `data/market_YYYYMMDD.json`
+
+```json
+{
+  "data_date": "2026-04-28",
+  "collected_at": "2026-04-29T08:00:12+09:00",
+  "indices": [
+    {
+      "code": "KS11",
+      "name": "KOSPI",
+      "close": 2635.10,
+      "change_pct": 0.45
+    },
+    {
+      "code": "KQ11",
+      "name": "KOSDAQ",
+      "close": 845.20,
+      "change_pct": -0.21
+    }
+  ],
+  "stocks": [
+    {
+      "code": "005930",
+      "name": "삼성전자",
+      "close": 73500,
+      "change_pct": 1.24,
+      "volume": 12345678,
+      "volume_ratio": 1.23
+    },
+    {
+      "code": "000660",
+      "name": "SK하이닉스",
+      "close": 185400,
+      "change_pct": -0.32,
+      "volume": 3210456,
+      "volume_ratio": 0.87
+    }
+  ]
+}
+```
+
+### 필드 설명
+
+#### 최상위
+| 필드 | 타입 | 설명 |
+|------|------|------|
+| `data_date` | `string (YYYY-MM-DD)` | 데이터의 실제 거래일. 주말/공휴일에 실행해도 직전 거래일이 채워짐 |
+| `collected_at` | `string (ISO 8601, KST)` | 수집 시각. 타임존은 항상 `+09:00` |
+| `indices` | `array` | 시장 지수 리스트 (KOSPI/KOSDAQ 순) |
+| `stocks` | `array` | 관심 종목 리스트 (`config.WATCHLIST` 순서 보존) |
+
+#### `indices[]` 각 항목
+| 필드 | 타입 | 설명 |
+|------|------|------|
+| `code` | `string` | FinanceDataReader 지수 코드 (`KS11`, `KQ11` 등) |
+| `name` | `string` | 표시용 한글 이름 |
+| `close` | `number (float)` | 종가. 지수는 소수점 포함 |
+| `change_pct` | `number (float)` | 전일 대비 등락률 (%, 소수 둘째 자리) |
+
+#### `stocks[]` 각 항목
+| 필드 | 타입 | 설명 |
+|------|------|------|
+| `code` | `string` | 6자리 종목 코드 (예: `"005930"`) |
+| `name` | `string` | 종목명 (한글) |
+| `close` | `integer` | 종가 (원). 정수 |
+| `change_pct` | `number (float)` | 전일 대비 등락률 (%, 소수 둘째 자리) |
+| `volume` | `integer` | 거래량 (주) |
+| `volume_ratio` | `number (float)` | 전일 거래량 대비 배수. `1.23` = 평소 대비 23% 많음, `0.50` = 절반 |
+
+### 실패 처리
+
+특정 종목 데이터를 못 가져온 경우 (상장폐지 등), 해당 객체의 모든 수치 필드는 `null` 이 되고 `error` 키가 추가됩니다. 다른 종목은 정상 처리됩니다.
+
+```json
+{
+  "code": "999999",
+  "name": "예시종목",
+  "close": null,
+  "change_pct": null,
+  "volume": null,
+  "volume_ratio": null,
+  "error": "데이터를 찾을 수 없음"
+}
+```
+
+네트워크 자체가 죽은 경우 (FDR 호출 전체 실패) JSON 파일은 만들어지지 않고 한국어 에러 메시지와 함께 종료합니다.
+
 ## 환경 변수
 
 추후 단계에서 다음 환경 변수가 필요해집니다. 실제 키는 `.env` 파일이나 GitHub Secrets로만 관리하며, 절대 저장소에 커밋하지 않습니다.

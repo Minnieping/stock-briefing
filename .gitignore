@@ -79,3 +79,8 @@ temp/
 # 로컬 테스트용 출력물(브리핑 미리보기 등)
 output/
 *.local.html
+
+# 매일 생성되는 시장 데이터 산출물 — 폴더 구조는 .gitkeep 으로 보존
+# 주의: '/data/' 처럼 디렉터리 자체를 무시하면 안의 파일은 negate 불가하므로 '/data/*' 사용
+/data/*
+!/data/.gitkeep
