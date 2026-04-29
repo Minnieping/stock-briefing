@@ -44,6 +44,70 @@
 start index.html
 ```
 
+## 설치 방법
+
+이 저장소를 처음 클론한 경우, 다음 순서대로 환경을 준비하세요.
+
+### 사전 요구 사항
+- Python 3.11 이상
+- Anthropic API 키 ([console.anthropic.com](https://console.anthropic.com/) 에서 발급)
+
+### 1. 저장소 클론
+
+```bash
+git clone https://github.com/Minnieping/stock-briefing.git
+cd stock-briefing
+```
+
+### 2. 가상환경 생성 (선택, 권장)
+
+가상환경을 사용하면 시스템 Python 과 의존성이 충돌하지 않습니다.
+
+```bash
+# 가상환경 생성
+python -m venv .venv
+
+# 활성화
+source .venv/Scripts/activate    # Windows (Git Bash)
+# .venv\Scripts\activate         # Windows (cmd / PowerShell)
+# source .venv/bin/activate      # macOS / Linux
+```
+
+활성화에 성공하면 프롬프트 앞에 `(.venv)` 가 붙습니다.
+
+### 3. 의존성 설치
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. 환경 변수 설정
+
+`.env.example` 을 복사해 `.env` 를 만들고 API 키를 채워 넣습니다.
+
+```bash
+cp .env.example .env
+```
+
+생성된 `.env` 파일을 열어 다음 줄을 수정하세요:
+
+```
+ANTHROPIC_API_KEY=sk-ant-api03-...실제_키_값...
+```
+
+> ⚠️ `.env` 는 `.gitignore` 에 포함되어 있어 절대 GitHub 에 올라가지 않습니다.
+> API 키를 직접 코드나 커밋 메시지에 적지 마세요.
+
+### 5. API 연결 테스트
+
+설치가 끝났는지 확인하기 위해 간단한 테스트 스크립트를 실행합니다.
+
+```bash
+python test_api.py
+```
+
+성공하면 Claude 가 한국어로 자기소개를 출력합니다. 인증/네트워크 문제가 있으면 한국어로 원인을 알려줍니다.
+
 ## 환경 변수
 
 추후 단계에서 다음 환경 변수가 필요해집니다. 실제 키는 `.env` 파일이나 GitHub Secrets로만 관리하며, 절대 저장소에 커밋하지 않습니다.
