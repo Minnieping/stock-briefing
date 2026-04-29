@@ -3,19 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="매일 오전 8시 자동 생성되는 한국어 주식 브리핑 사이트" />
+  <meta name="description" content="매일 오전 8시 자동 생성되는 한국어 주식 브리핑" />
   <meta name="color-scheme" content="dark light" />
-  <title>주식 브리핑 (준비 중)</title>
+  <title>오전 8시 브리핑 — 2026년 4월 29일 수요일</title>
   <style>
-    /* 색상 토큰 — 다크 모드 우선, 라이트 모드는 prefers-color-scheme로 대체 */
+    /* 색상 토큰 — 다크 모드 우선, 라이트 모드는 prefers-color-scheme 로 자동 전환 */
     :root {
       --bg: #0b0f17;
       --bg-elev: #131927;
+      --bg-elev-2: #1a2030;
       --border: #1f2a3d;
+      --border-soft: #161e2c;
       --text: #e6edf7;
       --text-muted: #8b97ad;
+      --text-subtle: #6b7588;
       --accent: #5b9dff;
       --accent-soft: rgba(91, 157, 255, 0.12);
+
+      /* 한국 주식 관행 — 양수는 빨강, 음수는 파랑 */
+      --up: #ff6b6b;
+      --down: #5b9dff;
+      --flat: #8b97ad;
+
       --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
     }
 
@@ -23,11 +32,17 @@
       :root {
         --bg: #f6f8fc;
         --bg-elev: #ffffff;
+        --bg-elev-2: #f0f4f9;
         --border: #e3e8f0;
+        --border-soft: #eef1f5;
         --text: #1a2233;
         --text-muted: #5a6478;
+        --text-subtle: #7c8595;
         --accent: #2563eb;
         --accent-soft: rgba(37, 99, 235, 0.1);
+        --up: #dc2626;
+        --down: #2563eb;
+        --flat: #5a6478;
         --shadow: 0 20px 60px rgba(15, 23, 42, 0.08);
       }
     }
@@ -37,7 +52,6 @@
     html, body {
       margin: 0;
       padding: 0;
-      min-height: 100vh;
     }
 
     body {
@@ -48,127 +62,349 @@
       color: var(--text);
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem 1.25rem;
-      /* 은은한 배경 그라디언트 — 너무 튀지 않게 */
+      font-size: 16px;
+      min-height: 100vh;
+      /* 은은한 배경 그라디언트 — 기존 랜딩 페이지 분위기 계승 */
       background-image:
         radial-gradient(circle at 15% 20%, var(--accent-soft), transparent 45%),
         radial-gradient(circle at 85% 80%, var(--accent-soft), transparent 40%);
+      background-attachment: fixed;
     }
 
     main {
-      width: 100%;
-      max-width: 640px;
-      background: var(--bg-elev);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 3rem 2.25rem;
-      box-shadow: var(--shadow);
-      text-align: center;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 4rem;
     }
 
-    .badge {
-      display: inline-block;
-      font-size: 0.78rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      color: var(--accent);
-      background: var(--accent-soft);
-      padding: 0.35rem 0.8rem;
-      border-radius: 999px;
-      margin-bottom: 1.5rem;
+    /* ===== Header ===== */
+    .page-header {
+      margin-bottom: 1.75rem;
     }
 
-    h1 {
-      font-size: clamp(1.75rem, 4.5vw, 2.5rem);
+    .page-header h1 {
+      font-size: 1.75rem;
       font-weight: 700;
-      margin: 0 0 1rem;
+      margin: 0 0 0.4rem;
       letter-spacing: -0.01em;
     }
 
-    .lead {
-      color: var(--text-muted);
-      font-size: 1.05rem;
-      margin: 0 0 2rem;
-    }
-
-    .roadmap {
-      text-align: left;
-      margin: 0 auto;
-      padding: 1.25rem 1.5rem;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      max-width: 460px;
-    }
-
-    @media (prefers-color-scheme: light) {
-      .roadmap { background: rgba(15, 23, 42, 0.02); }
-    }
-
-    .roadmap-title {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin: 0 0 0.75rem;
-    }
-
-    .roadmap ul {
-      list-style: none;
-      padding: 0;
+    .page-header .date {
       margin: 0;
-    }
-
-    .roadmap li {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.6rem;
-      padding: 0.35rem 0;
-      font-size: 0.95rem;
-    }
-
-    .roadmap li .step {
-      flex-shrink: 0;
-      width: 1.4rem;
       color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    /* ===== 시장 지수 카드 ===== */
+    .indices {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .index-card {
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.25rem;
+    }
+
+    .index-name {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+      font-weight: 500;
+    }
+
+    .index-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      margin-bottom: 0.25rem;
+      letter-spacing: -0.01em;
+    }
+
+    .index-change {
+      font-size: 0.95rem;
+      font-weight: 600;
       font-variant-numeric: tabular-nums;
     }
 
-    .roadmap li.current { color: var(--accent); font-weight: 600; }
+    /* ===== 종목 표 ===== */
+    .stocks, .briefing {
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
 
-    footer {
-      margin-top: 1.75rem;
+    .briefing { padding: 1.5rem; }
+
+    .section-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 0 0 0.85rem;
+      color: var(--text);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin: 0 -0.25rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-variant-numeric: tabular-nums;
+      font-size: 0.95rem;
+    }
+
+    th {
+      text-align: left;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      padding: 0.5rem 0.6rem 0.65rem;
+      border-bottom: 1px solid var(--border);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    th.th-num, td.td-num { text-align: right; }
+    th.th-name, td.td-name { text-align: left; }
+
+    td {
+      padding: 0.7rem 0.6rem;
+      border-bottom: 1px solid var(--border-soft);
+      white-space: nowrap;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .td-name { font-weight: 500; }
+
+    .td-error {
+      color: var(--text-subtle);
+      font-style: italic;
+    }
+
+    /* ===== 등락률 색상 (한국 관행) ===== */
+    .up { color: var(--up); }
+    .down { color: var(--down); }
+    .flat { color: var(--flat); }
+
+    /* ===== 브리핑 본문 ===== */
+    .briefing h1 {
+      /* strip_top_h1 으로 제거되었어야 하지만 안전장치 */
+      display: none;
+    }
+
+    .briefing h2 {
+      font-size: 0.95rem;
+      margin: 1.5rem 0 0.6rem;
+      color: var(--accent);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .briefing h2:first-child {
+      margin-top: 0;
+    }
+
+    .briefing p {
+      margin: 0 0 0.85rem;
+      line-height: 1.7;
+    }
+
+    .briefing p:last-child {
+      margin-bottom: 0;
+    }
+
+    .briefing strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .briefing ul {
+      padding-left: 1.25rem;
+      margin: 0.5rem 0 0.85rem;
+    }
+
+    .briefing li {
+      margin-bottom: 0.55rem;
+      line-height: 1.65;
+    }
+
+    .briefing li:last-child {
+      margin-bottom: 0;
+    }
+
+    .briefing a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .briefing a:hover {
+      text-decoration: underline;
+    }
+
+    /* ===== 푸터 ===== */
+    .page-footer {
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-soft);
       font-size: 0.85rem;
       color: var(--text-muted);
+    }
+
+    .page-footer .meta {
+      margin: 0 0 0.85rem;
+    }
+
+    .page-footer code {
+      background: var(--bg-elev);
+      padding: 0.1em 0.4em;
+      border-radius: 4px;
+      font-size: 0.85em;
+      border: 1px solid var(--border-soft);
+      font-family: "SF Mono", Menlo, Consolas, monospace;
+    }
+
+    .disclaimer {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+      margin: 0;
+      font-size: 0.8rem;
+      color: var(--text-subtle);
+      line-height: 1.65;
+    }
+
+    @media (prefers-color-scheme: light) {
+      .disclaimer {
+        background: rgba(15, 23, 42, 0.02);
+      }
+    }
+
+    /* ===== 모바일 ===== */
+    @media (max-width: 480px) {
+      main {
+        padding: 1.5rem 1rem 3rem;
+      }
+
+      .page-header h1 {
+        font-size: 1.5rem;
+      }
+
+      .indices {
+        gap: 0.6rem;
+      }
+
+      .index-card {
+        padding: 1rem;
+      }
+
+      .index-value {
+        font-size: 1.3rem;
+      }
+
+      .stocks, .briefing {
+        padding: 1rem;
+      }
+
+      .briefing { padding: 1.25rem; }
+
+      table {
+        font-size: 0.85rem;
+      }
+
+      th, td {
+        padding: 0.55rem 0.4rem;
+      }
+
+      th {
+        font-size: 0.72rem;
+      }
     }
   </style>
 </head>
 <body>
   <main>
-    <span class="badge">PREPARING · 준비 중</span>
-    <h1>🚀 주식 브리핑 사이트</h1>
-    <p class="lead">
-      매일 오전 8시(KST), 출근 전에 확인할 수 있는<br />
-      자동 생성 주식 브리핑이 곧 이곳에 올라옵니다.
-    </p>
+    <header class="page-header">
+      <h1>📈 오전 8시 브리핑</h1>
+      <p class="date">2026년 4월 29일 수요일</p>
+    </header>
 
-    <section class="roadmap" aria-label="개발 로드맵">
-      <p class="roadmap-title">개발 로드맵</p>
-      <ul>
-        <li class="current"><span class="step">1.</span> 랜딩 페이지 &amp; GitHub Pages 배포</li>
-        <li><span class="step">2.</span> 주식 데이터 수집 스크립트</li>
-        <li><span class="step">3.</span> Claude로 한국어 브리핑 생성</li>
-        <li><span class="step">4.</span> HTML 페이지 자동 생성</li>
-        <li><span class="step">5.</span> 매일 오전 8시 자동 실행</li>
-      </ul>
+    <section class="indices" aria-label="시장 지수">
+      <div class="index-card"><div class="index-name">KOSPI</div><div class="index-value">6,639.72</div><div class="index-change down">-0.02%</div></div>
+      <div class="index-card"><div class="index-name">KOSDAQ</div><div class="index-value">1,212.41</div><div class="index-change down">-0.26%</div></div>
     </section>
 
-    <footer>조금만 기다려 주세요. 곧 만나요. 📈</footer>
+    <section class="stocks" aria-label="관심 종목">
+      <h2 class="section-title">관심 종목</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th class="th-name">종목명</th>
+              <th class="th-num">종가</th>
+              <th class="th-num">등락률</th>
+              <th class="th-num">거래량</th>
+              <th class="th-num">거래량비율</th>
+            </tr>
+          </thead>
+          <tbody>
+          <tr><td class="td-name">삼성전자</td><td class="td-num">219,500원</td><td class="td-num down">-1.13%</td><td class="td-num">7,075,852</td><td class="td-num">0.38x</td></tr>
+          <tr><td class="td-name">SK하이닉스</td><td class="td-num">1,292,000원</td><td class="td-num down">-0.62%</td><td class="td-num">1,529,797</td><td class="td-num">0.51x</td></tr>
+          <tr><td class="td-name">NAVER</td><td class="td-num">220,500원</td><td class="td-num up">+0.46%</td><td class="td-num">459,104</td><td class="td-num">0.61x</td></tr>
+          <tr><td class="td-name">카카오</td><td class="td-num">48,250원</td><td class="td-num down">-1.23%</td><td class="td-num">736,319</td><td class="td-num">0.58x</td></tr>
+          <tr><td class="td-name">셀트리온</td><td class="td-num">205,500원</td><td class="td-num down">-0.72%</td><td class="td-num">160,316</td><td class="td-num">0.35x</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="briefing" aria-label="시장 브리핑">
+      <h2>시장 한 줄 요약</h2>
+<p>지수 낙폭은 제한적이나 주요 대형주가 일제히 약세를 보이며 관망 심리가 짙게 깔린 하루로 보입니다.</p>
+<h2>지수 동향</h2>
+<p>KOSPI는 6,639.72(-0.02%)로 사실상 보합에 가까운 마감이나, KOSDAQ은 1,212.41(-0.26%)로 상대적으로 더 큰 하락 압력을 받은 모습입니다. 지수 자체의 낙폭보다 개별 대형주들의 전반적인 약세 흐름이 눈에 띄며, 상승 탄력이 크지 않은 장세로 해석됩니다.</p>
+<h2>주요 종목 코멘트</h2>
+<ul>
+<li>
+<p><strong>삼성전자 (219,500원 / -1.13%)</strong> 반도체 업황 경계감이 지속되는 가운데 하락세를 이어갔습니다. 현재 데이터는 장중 누적 시점으로, 거래량 수준은 장 마감 후 재확인이 필요합니다.</p>
+</li>
+<li>
+<p><strong>SK하이닉스 (1,292,000원 / -0.62%)</strong> 삼성전자와 함께 반도체 투톱이 동반 약세를 보이며 섹터 전반에 대한 신중한 시각을 반영하는 것으로 보입니다.</p>
+</li>
+<li>
+<p><strong>NAVER (220,500원 / +0.46%)</strong> 약세장 속 유일하게 소폭 상승해 상대적 강세를 나타냈으며, 플랫폼·AI 관련 기대감이 낙폭 방어에 작용한 것으로 해석됩니다.</p>
+</li>
+<li>
+<p><strong>카카오 (48,250원 / -1.23%)</strong> 하락 폭이 가장 두드러지며 플랫폼 업종 내 차별화된 부진이 이어지는 모양새입니다.</p>
+</li>
+<li>
+<p><strong>셀트리온 (205,500원 / -0.72%)</strong> 바이오 대장주로서 낙폭은 제한적이나 뚜렷한 반등 모멘텀을 찾기 어려운 상황으로 보입니다.</p>
+</li>
+</ul>
+<h2>주목할 점</h2>
+<p>반도체(삼성전자·SK하이닉스)와 카카오의 동반 약세 속 NAVER만 홀로 강보합을 기록, 같은 플랫폼 섹터 안에서도 종목 간 온도차가 뚜렷하게 나타나고 있습니다.</p>
+    </section>
+
+    <footer class="page-footer">
+      <p class="meta">
+        데이터 수집: 2026-04-29 11:43:34 KST<br />
+        생성 모델: <code>claude-sonnet-4-6</code>
+      </p>
+      <p class="disclaimer">
+        ⚠ 본 브리핑은 투자 자문이 아닙니다. 모든 투자 결정과 그 결과에 대한 책임은 본인에게 있습니다.
+        데이터는 FinanceDataReader / KRX 공개 정보 기준이며 오류나 누락 가능성이 있습니다.
+      </p>
+    </footer>
   </main>
 </body>
 </html>
