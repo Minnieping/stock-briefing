@@ -19,3 +19,7 @@ MARKET_INDICES = [
     ("KS11", "KOSPI"),
     ("KQ11", "KOSDAQ"),
 ]
+
+# Claude 모델 — 브리핑 생성용
+# Sonnet 4.6: 시황 기사 분량(800자 내외) 작성에 적절한 속도 / 비용 / 품질 균형
+MODEL_BRIEFING = "claude-sonnet-4-6"
