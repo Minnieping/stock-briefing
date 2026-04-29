@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="매일 오전 8시 자동 생성되는 한국어 주식 브리핑 사이트" />
+  <meta name="color-scheme" content="dark light" />
+  <title>주식 브리핑 (준비 중)</title>
+  <style>
+    /* 색상 토큰 — 다크 모드 우선, 라이트 모드는 prefers-color-scheme로 대체 */
+    :root {
+      --bg: #0b0f17;
+      --bg-elev: #131927;
+      --border: #1f2a3d;
+      --text: #e6edf7;
+      --text-muted: #8b97ad;
+      --accent: #5b9dff;
+      --accent-soft: rgba(91, 157, 255, 0.12);
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f6f8fc;
+        --bg-elev: #ffffff;
+        --border: #e3e8f0;
+        --text: #1a2233;
+        --text-muted: #5a6478;
+        --accent: #2563eb;
+        --accent-soft: rgba(37, 99, 235, 0.1);
+        --shadow: 0 20px 60px rgba(15, 23, 42, 0.08);
+      }
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                   "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic",
+                   Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.25rem;
+      /* 은은한 배경 그라디언트 — 너무 튀지 않게 */
+      background-image:
+        radial-gradient(circle at 15% 20%, var(--accent-soft), transparent 45%),
+        radial-gradient(circle at 85% 80%, var(--accent-soft), transparent 40%);
+    }
+
+    main {
+      width: 100%;
+      max-width: 640px;
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 3rem 2.25rem;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      margin-bottom: 1.5rem;
+    }
+
+    h1 {
+      font-size: clamp(1.75rem, 4.5vw, 2.5rem);
+      font-weight: 700;
+      margin: 0 0 1rem;
+      letter-spacing: -0.01em;
+    }
+
+    .lead {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      margin: 0 0 2rem;
+    }
+
+    .roadmap {
+      text-align: left;
+      margin: 0 auto;
+      padding: 1.25rem 1.5rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      max-width: 460px;
+    }
+
+    @media (prefers-color-scheme: light) {
+      .roadmap { background: rgba(15, 23, 42, 0.02); }
+    }
+
+    .roadmap-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin: 0 0 0.75rem;
+    }
+
+    .roadmap ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .roadmap li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      padding: 0.35rem 0;
+      font-size: 0.95rem;
+    }
+
+    .roadmap li .step {
+      flex-shrink: 0;
+      width: 1.4rem;
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .roadmap li.current { color: var(--accent); font-weight: 600; }
+
+    footer {
+      margin-top: 1.75rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <span class="badge">PREPARING · 준비 중</span>
+    <h1>🚀 주식 브리핑 사이트</h1>
+    <p class="lead">
+      매일 오전 8시(KST), 출근 전에 확인할 수 있는<br />
+      자동 생성 주식 브리핑이 곧 이곳에 올라옵니다.
+    </p>
+
+    <section class="roadmap" aria-label="개발 로드맵">
+      <p class="roadmap-title">개발 로드맵</p>
+      <ul>
+        <li class="current"><span class="step">1.</span> 랜딩 페이지 &amp; GitHub Pages 배포</li>
+        <li><span class="step">2.</span> 주식 데이터 수집 스크립트</li>
+        <li><span class="step">3.</span> Claude로 한국어 브리핑 생성</li>
+        <li><span class="step">4.</span> HTML 페이지 자동 생성</li>
+        <li><span class="step">5.</span> 매일 오전 8시 자동 실행</li>
+      </ul>
+    </section>
+
+    <footer>조금만 기다려 주세요. 곧 만나요. 📈</footer>
+  </main>
+</body>
+</html>

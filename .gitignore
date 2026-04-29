@@ -1,0 +1,81 @@
+# ===== 환경 변수 / 비밀 정보 =====
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# 배포 / 빌드 산출물
+build/
+dist/
+*.egg-info/
+*.egg
+.eggs/
+wheels/
+pip-wheel-metadata/
+
+# 가상 환경
+.venv/
+venv/
+env/
+ENV/
+
+# 테스트 / 커버리지
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+
+# 타입 체크 / 린트 캐시
+.mypy_cache/
+.ruff_cache/
+.pyre/
+.pytype/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# ===== IDE / 에디터 =====
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.cursor/
+
+# Claude Code 로컬 전용 설정 (공유용 .claude/settings.json은 커밋 대상)
+.claude/settings.local.json
+
+# ===== OS =====
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ===== 로그 / 임시 파일 =====
+*.log
+logs/
+tmp/
+temp/
+
+# ===== 프로젝트 전용 =====
+# 로컬 테스트용 출력물(브리핑 미리보기 등)
+output/
+*.local.html
